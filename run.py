@@ -67,6 +67,36 @@ def welcome():
     print('{:^68}'.format(' 3: QUIT '))
     print('\n' * 4)
 
-    
+    while True:
+        user_choice = input('                       Please make a choice : ')
+
+        # checks for user input to match choice 1 or 2.
+        if user_choice == '1':
+            return player_info()
+
+        elif user_choice == '2':
+            print('{:*^70}'.format(' HIGH SCORES '))
+            print('\n')
+            # sorts the player dict and prints out the 5 highest scores.
+            ordered_player = dict(sorted(
+                player.items(), key=operator.itemgetter(1),
+                reverse=True)[:5])
+            for key, val in ordered_player.items():
+                print('{:^70}'.format(f'{key} : {val}'))
+            print("\n" * 4)
+
+            # Returns user to Welcome prompt.
+            while True:
+                if input('''
+                          RETURN? (Y) : ''').upper() == 'Y':
+                    welcome()
+                else:
+                    print('{:^70}'.format(' Try again ! '))
+
+        elif user_choice == '3':
+            sys.exit()
+        else:
+            print('{:^70}'.format(' Must choose 1, 2 or 3 ! '))
+
 
 welcome()
