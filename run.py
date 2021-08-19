@@ -33,13 +33,18 @@ word_list = [
     ]
 player = {'GORAN': 0}
 
-# checks if a json file exist and loads the file if it does.
+"""
+checks if a json file exist and loads the file if it does.
+code for json from
+http://www.coding4you.at/inf_tag/beginners_python_cheat_sheet.pdf
+"""
 filename = 'player.json'
 try:
     with open(filename) as f_obj:
         player = json.load(f_obj)
 except (FileNotFoundError, KeyError, ValueError):
     pass
+
 
 def get_word():
     """
@@ -49,3 +54,19 @@ def get_word():
     word = random.choice(word_list)
     return word.upper()
 
+
+def welcome():
+    """
+    Displays the welcome prompt.
+    And navigation to start a game or look at high scores.
+    """
+    print('{:*^70}'.format(' WELCOME TO HANGMAN ! '))
+    print('\n' * 4)
+    print('{:^68}'.format(' 1: PLAY GAME '))
+    print('{:^68}'.format(' 2: HIGH SCORES '))
+    print('{:^68}'.format(' 3: QUIT '))
+    print('\n' * 4)
+
+    
+
+welcome()
