@@ -4,17 +4,13 @@ import sys
 import operator
 import os
 
-word_list = [''' 'wares', 'soup', 'mount', 'extend', 'brown', 'computer',
+word_list = ['wares', 'soup', 'mount', 'extend', 'brown', 'computer',
              'apple', 'market', 'school', 'coin', 'money', 'dog',
-             'transform', 'collect', 'party', 'friends', 'cool',
-             'banana', 'cat', 'animal', 'justice', 'breakdance',
-             'happy', 'jump', 'scream', 'python' ''']
+             'transform', 'collect', 'party', 'friends', 'cool', 'banana',
+             'cat', 'animal', 'justice', 'breakdance', 'happy', 'jump',
+             'scream', 'python']
 
 player = {'GORAN': 0}
-
-
-def clear_terminal():
-    os.system('cls' if os.name == 'nt' else 'clear')
 
 """
 checks if a json file exist and loads the file if it does.
@@ -27,6 +23,13 @@ try:
         player = json.load(f_obj)
 except (FileNotFoundError, KeyError, ValueError):
     pass
+
+
+def clear_terminal():
+    """
+    Clearing the terminal.
+    """
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def get_word():
@@ -94,14 +97,100 @@ def player_info():
     print('{:*^70}'.format(' Let´s play Hangman ! '))
     print(display_hangman(tries))
     global user
-    user = input('                       Please enter your name: ').upper()
-    for name in player.keys():
-        if name != user:
-            player[user] = 0
-            break
+
+    while True:
+        user = input('                       Please enter your name: ').upper()
+        if user.isalpha():
+            for key in player.items():
+                if key != user:
+                    player[user] = 0
+                    return play()
         else:
-            pass
-    return play()
+            print('{:^70}'.format(' Must choose letters '))
+
+
+
+
+
+def display_hangman(tries):
+    """
+    This function holds the different stages of user guesses
+    and displays the graphic for a hangman.
+
+    This code was taken from youtube
+    """
+    stages = [  # final state: head, torso, both arms, and both legs
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |     \\|/
+                                |      |
+                                |     / \\
+                                -
+                                """,
+                                # head, torso, both arms, and one leg
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |     \\|/
+                                |      |
+                                |     / 
+                                -
+                                """,
+                                # head, torso, and both arms
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |     \\|/
+                                |      |
+                                |      
+                                -
+                                """,
+                                # head, torso, and one arm
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |     \\|
+                                |      |
+                                |     
+                                -
+                                """,
+                                # head and torso
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |      |
+                                |      |
+                                |     
+                                -
+                                """,
+                                # head
+                                """
+                                --------
+                                |      |
+                                |      O
+                                |    
+                                |      
+                                |     
+                                -
+                                """,
+                                # initial empty state
+                                """
+                                --------
+                                |      |
+                                |      
+                                |    
+                                |      
+                                |     
+                                -
+                                """
+    ]
+    return stages[tries]
 
 
 welcome()
