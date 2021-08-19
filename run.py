@@ -5,6 +5,7 @@ import random
 import json
 import sys
 import operator
+import os
 
 word_list = [
         'wares',
@@ -75,6 +76,8 @@ def welcome():
             return player_info()
 
         elif user_choice == '2':
+            # clears the terminal before printing out code.
+            os.system('cls' if os.name == 'nt' else 'clear')
             print('{:*^70}'.format(' HIGH SCORES '))
             print('\n')
             # sorts the player dict and prints out the 5 highest scores.
@@ -89,6 +92,8 @@ def welcome():
             while True:
                 if input('''
                           RETURN? (Y) : ''').upper() == 'Y':
+                    # clears the terminal before printing out code.
+                    os.system('cls' if os.name == 'nt' else 'clear')
                     welcome()
                 else:
                     print('{:^70}'.format(' Try again ! '))
