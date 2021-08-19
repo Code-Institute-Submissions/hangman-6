@@ -33,3 +33,19 @@ word_list = [
     ]
 player = {'GORAN': 0}
 
+# checks if a json file exist and loads the file if it does.
+filename = 'player.json'
+try:
+    with open(filename) as f_obj:
+        player = json.load(f_obj)
+except (FileNotFoundError, KeyError, ValueError):
+    pass
+
+def get_word():
+    """
+    Gets a random word from my word_list and return the word
+    with the word in uppercase.
+    """
+    word = random.choice(word_list)
+    return word.upper()
+
