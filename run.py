@@ -1,38 +1,20 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
 import random
 import json
 import sys
 import operator
 import os
 
-word_list = [
-        'wares',
-        'soup',
-        'mount',
-        'extend',
-        'brown',
-        'computer',
-        'apple',
-        'market',
-        'school',
-        'coin',
-        'money',
-        'dog',
-        'transform',
-        'collect',
-        'party',
-        'friends',
-        'cool',
-        'banana',
-        'cat',
-        'animal',
-        'justice',
-        'breakdance',
-        'happy'
-    ]
+word_list = [''' 'wares', 'soup', 'mount', 'extend', 'brown', 'computer',
+             'apple', 'market', 'school', 'coin', 'money', 'dog',
+             'transform', 'collect', 'party', 'friends', 'cool',
+             'banana', 'cat', 'animal', 'justice', 'breakdance',
+             'happy', 'jump', 'scream', 'python' ''']
+
 player = {'GORAN': 0}
+
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 """
 checks if a json file exist and loads the file if it does.
@@ -61,6 +43,7 @@ def welcome():
     Displays the welcome prompt.
     And navigation to start a game or look at high scores.
     """
+    clear_terminal()
     print('{:*^70}'.format(' WELCOME TO HANGMAN ! '))
     print('\n' * 4)
     print('{:^68}'.format(' 1: PLAY GAME '))
@@ -76,8 +59,7 @@ def welcome():
             return player_info()
 
         elif user_choice == '2':
-            # clears the terminal before printing out code.
-            os.system('cls' if os.name == 'nt' else 'clear')
+            clear_terminal()
             print('{:*^70}'.format(' HIGH SCORES '))
             print('\n')
             # sorts the player dict and prints out the 5 highest scores.
@@ -92,8 +74,7 @@ def welcome():
             while True:
                 if input('''
                           RETURN? (Y) : ''').upper() == 'Y':
-                    # clears the terminal before printing out code.
-                    os.system('cls' if os.name == 'nt' else 'clear')
+                    clear_terminal()
                     welcome()
                 else:
                     print('{:^70}'.format(' Try again ! '))
@@ -102,6 +83,25 @@ def welcome():
             sys.exit()
         else:
             print('{:^70}'.format(' Must choose 1, 2 or 3 ! '))
+
+
+def player_info():
+    """
+    To get each players name and update the player dict.
+    """
+    clear_terminal()
+    tries = 0
+    print('{:*^70}'.format(' Let´s play Hangman ! '))
+    print(display_hangman(tries))
+    global user
+    user = input('                       Please enter your name: ').upper()
+    for name in player.keys():
+        if name != user:
+            player[user] = 0
+            break
+        else:
+            pass
+    return play()
 
 
 welcome()
