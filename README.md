@@ -1,31 +1,94 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# HANGMAN
 
-Welcome gorsig,
+Hangman is a Python terminal game, wich runs in the Code Institute mock terminal on Heroku.
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **August 17, 2021**
+Users can try to beat the computer by finding all of the letters in the word or guessing the word that the computer randomly selects.
+Users have 6 tries before they get "hanged" and looses.
 
-## Reminders
+[Here is the live version of my project.](https://py-hangman.herokuapp.com/)
+![](images/overview.png)
 
-* Your code must be placed in the `run.py` file
-* Your dependencies must be placed in the `requirements.txt` file
-* Do not edit any of the other files or your code may not deploy properly
+## How to play
+Hangman is a pen-and-paper game in a guessing form.
+In this game the user enters their name and the computer selects a random word that gets 
+displayed as "_______" and with graphics of a hangman in different stages.
+If user guesses a letter thats in the word it displays in the terminal on the line in it´s right position in the word.
+When the user guesses the whole word they win and can choose to play again or exit to the welcome screen.
+If the user can´t guess the word before their 6 turns is over they looses.
 
-## Creating the Heroku app
+# Features
+## Existing features
+    * Welcome screen.
+    * With multiple choices.
+    * accept user inputs
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+![](images/welcome.png)
 
-1. `heroku/python`
-2. `heroku/nodejs`
+    * High Score area.
+    * Presents the top 5 players.
+    * accept user inputs
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+![](images/high_scores.png)
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+    * Getting player name.
+    * accept user inputs
 
-Connect your GitHub repository and deploy as normal.
+![](images/player.png)
 
-## Constraints
+    * The game.
+    * Maintains score.
+    * Play aginst the computer.
+    * accept user inputs
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+![](images/play.png)
 
------
-Happy coding!
+    * Input validation and error-checking.
+        * try: except statement for FileNotFoundError, KeyError and ValueError
+          for the json file with the high scores.
+        * Not a valid guess, try again.
+        * Must choose 1, 2 or 3 !
+        * Try again !
+        * Must choose letters.
+        * Must choose Y or No.
+
+![](images/error1.png)
+![](images/error2.png)
+![](images/error3.png)
+![](images/error4.png)
+![](images/error5.png)
+
+## Future features
+    * Different levels of difficulty.
+    * Multiplayers
+
+# Testing
+I have manually tested this project by doing the following:
+    * Passed the code through a PEP8 linter and confirmed there are no problems.
+    * Given invalid inputs: strings when numbers are excepted, out of bounds inputs, same input twice.
+    * Tested in my local terminal and the Code Institute Heroku terminal.
+
+# Bugs
+    * High scores overrides with latest game result.
+        * Fixed by add an if statement to check if user scores are higher or not before updating json.
+    
+    * Game result win, have to type N twice to return to welcome screen.
+        * Fixed by change 2 input to print statesment.
+
+# No bugs remaining.
+
+# Validator testing
+    * PEP8 
+        * No errors were returned from [PEP8online](http://pep8online.com/)
+
+# Deployment
+    * Steps for deployment
+        * Fork or clone this repository
+        * Create a new Heroku app
+        * Set the buildbacks to Pyhton and NodeJS in that order
+        * Link the Heroku app to repository
+        * Click on Deploy
+
+# Credits
+    * Code Institute for the deployment terminal
+    * Fellow coders in stackoverview
+    * youtube videos
