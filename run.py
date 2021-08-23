@@ -67,7 +67,6 @@ def welcome():
     print('{:^80}'.format(' 2: HIGH SCORES '))
     print('{:^80}'.format(' 3: QUIT '))
     print('\n' * 4)
-    print('hello')
 
     while True:
         user_choice = input(' ' * 28 + ' Please make a choice : ')
