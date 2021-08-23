@@ -6,7 +6,7 @@ Users can try to beat the computer by finding all of the letters in the word or 
 Users have 6 tries before they get "hanged" and looses.
 
 [Here is the live version of my project.](https://py-hangman.herokuapp.com/)
-![](images/overview.png)
+![](assets/readme/overview.png)
 
 ## How to play
 Hangman is a pen-and-paper game in a guessing form.
@@ -22,25 +22,25 @@ If the user can´t guess the word before their 6 turns is over they looses.
     * With multiple choices.
     * accept user inputs
 
-![](images/welcome.png)
+![](assets/readme/welcome.png)
 
     * High Score area.
     * Presents the top 5 players.
     * accept user inputs
 
-![](images/high_scores.png)
+![](assets/readme/high_scores.png)
 
     * Getting player name.
     * accept user inputs
 
-![](images/player.png)
+![](assets/readme/player.png)
 
     * The game.
     * Maintains score.
     * Play aginst the computer.
     * accept user inputs
 
-![](images/play.png)
+![](assets/readme/play.png)
 
     * Input validation and error-checking.
         * try: except statement for FileNotFoundError, KeyError and ValueError
@@ -51,11 +51,14 @@ If the user can´t guess the word before their 6 turns is over they looses.
         * Must choose letters.
         * Must choose Y or No.
 
-![](images/error1.png)
-![](images/error2.png)
-![](images/error3.png)
-![](images/error4.png)
-![](images/error5.png)
+![](assets/readme/error1.png)
+![](assets/readme/error2.png)
+![](assets/readme/error3.png)
+![](assets/readme/error4.png)
+![](assets/readme/error5.png)
+
+# Flowchart
+![](assets/flowchart/hangman_chart.png)
 
 ## Future features
     * Different levels of difficulty.
