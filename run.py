@@ -10,24 +10,38 @@ word_list = ['wares', 'soup', 'mount', 'extend', 'brown', 'computer',
              'cat', 'animal', 'justice', 'breakdance', 'happy', 'jump',
              'scream', 'python']
 
-player = {'GORAN': 0}
+player = {}
+high_scores = {}
+filename = 'player.json'
 
 """
 checks if a json file exist and loads the file if it does.
 code for json from
 http://www.coding4you.at/inf_tag/beginners_python_cheat_sheet.pdf
 """
-filename = 'player.json'
 try:
     with open(filename) as f_obj:
-        player = json.load(f_obj)
+        high_scores = json.load(f_obj)
 except (FileNotFoundError, KeyError, ValueError):
     pass
+
+
+def write_json():
+    """
+    stores the player scores in a json file.
+    if the value in player is more then in high_scores.
+    """
+    if user not in high_scores.keys()\
+            or player.get(user) > high_scores.get(user):
+        high_scores[user] = player[user]
+        with open(filename, 'w') as f_obj:
+            json.dump(high_scores, f_obj)
 
 
 def clear_terminal():
     """
     Clearing the terminal.
+    code from http://www.coding4you.at/inf_tag/beginners_python_cheat_sheet.pdf
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -55,33 +69,28 @@ def welcome():
     print('\n' * 4)
 
     while True:
-        user_choice = input('                       Please make a choice : ')
-
+        user_choice = input(' ' * 23 + ' Please make a choice : ')
         # checks for user input to match choice 1 or 2.
         if user_choice == '1':
-            return player_info()
-
+            player_info()
         elif user_choice == '2':
             clear_terminal()
             print('{:*^70}'.format(' HIGH SCORES '))
             print('\n')
-            # sorts the player dict and prints out the 5 highest scores.
-            ordered_player = dict(sorted(
-                player.items(), key=operator.itemgetter(1),
-                reverse=True)[:5])
+            # sorts the high_scores and prints out the 5 highest scores.
+            ordered_player = \
+                dict(sorted(high_scores.items(),
+                            key=operator.itemgetter(1), reverse=True)[:5])
             for key, val in ordered_player.items():
                 print('{:^70}'.format(f'{key} : {val}'))
             print("\n" * 4)
-
             # Returns user to Welcome prompt.
             while True:
-                if input('''
-                          RETURN? (Y) : ''').upper() == 'Y':
+                if input(' ' * 27 + ' RETURN? (Y) : ').upper() == 'Y':
                     clear_terminal()
                     welcome()
                 else:
                     print('{:^70}'.format(' Try again ! '))
-
         elif user_choice == '3':
             sys.exit()
         else:
@@ -95,21 +104,135 @@ def player_info():
     clear_terminal()
     tries = 0
     print('{:*^70}'.format(' Let´s play Hangman ! '))
+    print('\n')
     print(display_hangman(tries))
     global user
-
+    """
+    To check if input is a char in the alphabet,
+    and if it´s in the player dict.
+    If it is move on else update the player dict
+    with the input and a score of 0.
+    """
     while True:
-        user = input('                       Please enter your name: ').upper()
+        user = input(' ' * 21 + ' Please enter your name: ').upper()
         if user.isalpha():
-            for key in player.items():
-                if key != user:
-                    player[user] = 0
-                    return play()
+            if user not in player.keys():
+                player[user] = 0
+                play()
+            else:
+                play()
         else:
             print('{:^70}'.format(' Must choose letters '))
 
 
+def play():
+    """
+    This function holds the game.
+    """
+    clear_terminal()
+    word = get_word()
+    word_completion = "_" * len(word)
+    guessed = False
+    guessed_letters = []
+    guessed_words = []
+    tries = 6
+    print('{:*^70}'.format(' Let´s play Hangman ! '))
+    print('\n')
+    print(display_hangman(tries))
+    print('{:^70}'.format(word_completion))
 
+    while not guessed and tries > 0:
+        # Getting user input
+        guess = input(' ' * 18 + ' Please guess a letter or word: ').upper()
+        # Checking if user input matches the letter in the "secret word".
+        # and if it is a char in the alphabet.
+        if len(guess) == 1 and guess.isalpha():
+            if guess in guessed_letters:
+                clear_terminal()
+                print('{:*^70}'.format(' Let´s play Hangman ! '))
+                print('\n')
+                print('{:^70}'.format(' You already guessed the letter'+guess))
+            elif guess not in word:
+                clear_terminal()
+                print('{:*^70}'.format(' Let´s play Hangman ! '))
+                print('\n')
+                print('{:^70}'.format(guess + ' is not in the word. '))
+                tries -= 1
+                guessed_letters.append(guess)
+            else:
+                clear_terminal()
+                print('{:*^70}'.format(' Let´s play Hangman ! '))
+                print('\n')
+                print('{:^70}'.format(guess + ' is in the word! '))
+                guessed_letters.append(guess)
+                word_as_list = list(word_completion)
+                # This code snippet is from stackoverflow.
+                indices = [i for i, letter in enumerate(word)
+                           if letter == guess]
+                for index in indices:
+                    word_as_list[index] = guess
+                word_completion = "".join(word_as_list)
+                if "_" not in word_completion:
+                    guessed = True
+        # Checking if user input matches the word of the "secret word".
+        # and if it is a char in the alphabet.
+        elif len(guess) == len(word) and guess.isalpha():
+            if guess in guessed_words:
+                clear_terminal()
+                print('{:*^70}'.format(' Let´s play Hangman ! '))
+                print('\n')
+                print('{:^70}'.format(guess + ' is not in the word. ' + guess))
+            elif guess != word:
+                clear_terminal()
+                print('{:*^70}'.format(' Let´s play Hangman ! '))
+                print('\n')
+                print('{:^70}'.format(guess + ' is not the word. '))
+                tries -= 1
+                guessed_words.append(guess)
+            else:
+                guessed = True
+                word_completion = word
+        else:
+            clear_terminal()
+            print('{:*^70}'.format(' Let´s play Hangman ! '))
+            print('\n')
+            print('{:^70}'.format(' Not a valid guess, try again. '))
+        print(display_hangman(tries))
+        print('{:^70}'.format(word_completion))
+
+    if guessed:
+        clear_terminal()
+        print('{:*^70}'.format(' Let´s play Hangman ! '))
+        print('\n')
+        print(display_hangman(tries))
+        print('{:^70}'.format(' Congrats, you guessed the word! You win! '))
+        while True:
+            play_again_win = input(' ' * 25 + ' Play Again? (Y/N) ').upper()
+            if play_again_win == 'Y':
+                player[user] += 1
+                play()
+            elif play_again_win == 'N':
+                player[user] += 1
+                write_json()
+                welcome()
+            else:
+                print('{:^70}'.format(' Must choose Y or N '))
+
+    else:
+        clear_terminal()
+        print('{:*^70}'.format(' Let´s play Hangman ! '))
+        print('\n')
+        print(display_hangman(tries))
+        print(""" Sorry, you ran out of tries. The word was """ + word +
+              """. Maybe next time!""")
+        while True:
+            play_again_lost = input(' ' * 25 + ' Play Again? (Y/N) ').upper()
+            if play_again_lost == 'Y':
+                play()
+            elif play_again_lost == 'N':
+                welcome()
+            else:
+                print('{:^70}'.format(' Must choose Y or N '))
 
 
 def display_hangman(tries):
@@ -120,75 +243,75 @@ def display_hangman(tries):
     This code was taken from youtube
     """
     stages = [  # final state: head, torso, both arms, and both legs
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |     \\|/
-                                |      |
-                                |     / \\
-                                -
-                                """,
-                                # head, torso, both arms, and one leg
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |     \\|/
-                                |      |
-                                |     / 
-                                -
-                                """,
-                                # head, torso, and both arms
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |     \\|/
-                                |      |
-                                |      
-                                -
-                                """,
-                                # head, torso, and one arm
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |     \\|
-                                |      |
-                                |     
-                                -
-                                """,
-                                # head and torso
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |      |
-                                |      |
-                                |     
-                                -
-                                """,
-                                # head
-                                """
-                                --------
-                                |      |
-                                |      O
-                                |    
-                                |      
-                                |     
-                                -
-                                """,
-                                # initial empty state
-                                """
-                                --------
-                                |      |
-                                |      
-                                |    
-                                |      
-                                |     
-                                -
-                                """
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |     \\|/
+                             |      |
+                             |     / \\
+                             -
+                          """,
+                          # head, torso, both arms, and one leg
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |     \\|/
+                             |      |
+                             |     /
+                             -
+                          """,
+                          # head, torso, and both arms
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |     \\|/
+                             |      |
+                             |
+                             -
+                          """,
+                          # head, torso, and one arm
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |     \\|
+                             |      |
+                             |
+                             -
+                          """,
+                          # head and torso
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |      |
+                             |      |
+                             |
+                             -
+                          """,
+                          # head
+                          """
+                             --------
+                             |      |
+                             |      O
+                             |
+                             |
+                             |
+                             -
+                          """,
+                          # initial empty state
+                          """
+                             --------
+                             |      |
+                             |
+                             |
+                             |
+                             |
+                             -
+                          """
     ]
     return stages[tries]
 
