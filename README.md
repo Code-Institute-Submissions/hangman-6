@@ -76,6 +76,9 @@ I have manually tested this project by doing the following:
     
     * Game result win, have to type N twice to return to welcome screen.
         * Fixed by change 2 input to print statesment.
+    
+    * After deployment to Heroku the high scores was reset after a few hours.
+        * Fixed bu changing from storing high scores in json file to goole sheets.
 
 # No bugs remaining.
 
