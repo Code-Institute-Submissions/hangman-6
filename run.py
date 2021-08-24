@@ -91,7 +91,7 @@ def welcome():
             print("\n" * 4)
             # Returns user to Welcome prompt.
             while True:
-                if input(' ' * 33 + ' RETURN? (Y) :\n ').upper() == 'Y':
+                if input(' ' * 33 + ' RETURN? (Y) : ').upper() == 'Y':
                     clear_terminal()
                     welcome()
                 else:
@@ -117,7 +117,7 @@ def player_info():
     and update the scores dict with the input and a score of 0.
     """
     while True:
-        user = input(' ' * 27 + ' Please enter your name:\n ').upper()
+        user = input(' ' * 27 + ' Please enter your name: ').upper()
         if user.isalpha():
             game_score[user] = 0
             play()
@@ -213,7 +213,7 @@ def play():
         print('{:^80}'.format(' Congrats ' + user +
               ', you guessed the word! You win! '))
         while True:
-            play_again_win = input(' ' * 30 + ' Play Again? (Y/N)\n ').upper()
+            play_again_win = input(' ' * 30 + ' Play Again? (Y/N) ').upper()
             if play_again_win == 'Y':
                 game_score[user] += 1
                 play()
@@ -240,7 +240,7 @@ def play():
         print('{:^80}'.format(' Sorry ' + user + ', you ran out of tries.' +
               ' The word was ' + word + '. Maybe next time!'))
         while True:
-            play_again_lost = input(' ' * 30 + ' Play Again? (Y/N)\n ').upper()
+            play_again_lost = input(' ' * 30 + ' Play Again? (Y/N) ').upper()
             if play_again_lost == 'Y':
                 play()
             elif play_again_lost == 'N':
