@@ -1,8 +1,29 @@
 import random
-import json
 import sys
 import operator
 import os
+
+"""
+code from Love sandwiches, for storing high scores in google sheets.
+"""
+import gspread
+from google.oauth2.service_account import Credentials
+
+SCOPE = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive"
+    ]
+
+CREDS = Credentials.from_service_account_file('creds.json')
+SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+SHEET = GSPREAD_CLIENT.open('hangman_scores')
+
+high_scores = SHEET.worksheet('highscores')
+scores = high_scores.get_all_records()
+game_score = {}
+
 
 word_list = ['wares', 'soup', 'mount', 'extend', 'brown', 'computer',
              'apple', 'market', 'school', 'coin', 'money', 'dog',
@@ -10,32 +31,17 @@ word_list = ['wares', 'soup', 'mount', 'extend', 'brown', 'computer',
              'cat', 'animal', 'justice', 'breakdance', 'happy', 'jump',
              'scream', 'python']
 
-player = {}
-high_scores = {}
-filename = 'player.json'
 
-"""
-checks if a json file exist and loads the file if it does.
-code for json from
-http://www.coding4you.at/inf_tag/beginners_python_cheat_sheet.pdf
-"""
-try:
-    with open(filename) as f_obj:
-        high_scores = json.load(f_obj)
-except (FileNotFoundError, KeyError, ValueError):
-    pass
-
-
-def write_json():
+def update_score_sheet():
     """
-    stores the player scores in a json file.
-    if the value in player is more then in high_scores.
+    This function updates the google sheet with the players name and score.
+    with help from stackowerflow.
     """
-    if user not in high_scores.keys()\
-            or player.get(user) > high_scores.get(user):
-        high_scores[user] = player[user]
-        with open(filename, 'w') as f_obj:
-            json.dump(high_scores, f_obj)
+    keys = [str(eachvalue) for eachvalue in scores[0].keys()]
+    values = [str(eachvalue) for eachvalue in scores[0].values()]
+    update_score = [{'range': 'A1:Z1', 'values': [keys]},
+                    {'range': 'A2:Z2', 'values': [values]}]
+    high_scores.batch_update(update_score)
 
 
 def clear_terminal():
@@ -70,17 +76,16 @@ def welcome():
 
     while True:
         user_choice = input(' ' * 28 + ' Please make a choice : ')
-        # checks for user input to match choice 1 or 2.
+        # checks for user input to match choices.
         if user_choice == '1':
             player_info()
         elif user_choice == '2':
             clear_terminal()
             print('{:*^80}'.format(' HIGH SCORES '))
             print('\n')
-            # sorts the high_scores and prints out the 5 highest scores.
-            ordered_player = \
-                dict(sorted(high_scores.items(),
-                            key=operator.itemgetter(1), reverse=True)[:5])
+            # sorts the scores in the 5 highest scores.
+            ordered_player = (dict(sorted(scores[0].items(),
+                              key=operator.itemgetter(1), reverse=True)[:5]))
             for key, val in ordered_player.items():
                 print('{:^80}'.format(f'{key} : {val}'))
             print("\n" * 4)
@@ -109,18 +114,13 @@ def player_info():
     global user
     """
     To check if input is a char in the alphabet,
-    and if it´s in the player dict.
-    If it is move on else update the player dict
-    with the input and a score of 0.
+    and update the scores dict with the input and a score of 0.
     """
     while True:
         user = input(' ' * 27 + ' Please enter your name: ').upper()
         if user.isalpha():
-            if user not in player.keys():
-                player[user] = 0
-                play()
-            else:
-                play()
+            game_score[user] = 0
+            play()
         else:
             print('{:^75}'.format(' Must choose letters '))
 
@@ -215,12 +215,20 @@ def play():
         while True:
             play_again_win = input(' ' * 30 + ' Play Again? (Y/N) ').upper()
             if play_again_win == 'Y':
-                player[user] += 1
+                game_score[user] += 1
                 play()
             elif play_again_win == 'N':
-                player[user] += 1
-                write_json()
-                welcome()
+                game_score[user] += 1
+                if user not in scores[0].keys():
+                    scores[0][user] = game_score[user]
+                    update_score_sheet()
+                    welcome()
+                elif game_score[user] > scores[0][user]:
+                    scores[0][user] = game_score[user]
+                    update_score_sheet()
+                    welcome()
+                else:
+                    welcome()
             else:
                 print('{:^80}'.format(' Must choose Y or N '))
 
